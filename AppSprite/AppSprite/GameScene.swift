@@ -10,8 +10,8 @@ import SpriteKit
 import GameplayKit
 import CoreMotion
 var player_  = SKSpriteNode()
-var playerColor_ = UIColor.orange
-var playerSize_ = CGSize(width: 50, height: 50)
+//var playerColor_ = UIColor.red
+//var playerSize_ = CGSize(width: 50, height: 50)
 
 class GameScene: SKScene {
     
@@ -22,15 +22,16 @@ class GameScene: SKScene {
         view.addGestureRecognizer(recognizer)*/
         spawnPlayer()
         addgestures()
+        accelerometer()
         
         }
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+   /* override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let touchLoc = touch.location(in: self)
             let angle = atan2(touchLoc.y-player_.position.y, touchLoc.x-player_.position.x)
             player_.zRotation = angle - CGFloat(Double.pi/2)
         }
-    }
+    }*/
     
     
     override func update(_ currentTime: TimeInterval) {
@@ -38,8 +39,15 @@ class GameScene: SKScene {
     }
  
     func spawnPlayer(){
-        player_ = SKSpriteNode(color: playerColor_, size: playerSize_)
+        //player_ = SKSpriteNode(color: playerColor_, size: playerSize_)
+        let texture_ = SKTexture(imageNamed:"ship")
+        texture_.filteringMode = SKTextureFilteringMode.nearest
+
+               player_ = SKSpriteNode(texture: texture_)
         player_.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        print("aaaa")
+        self.addChild(player_)
+        
     }
     func addgestures(){
         let gestures_: [UISwipeGestureRecognizer.Direction] = [.up, .right, .down, .left]
@@ -53,13 +61,14 @@ class GameScene: SKScene {
         if let gesture = gesture as? UISwipeGestureRecognizer{
            switch gesture.direction{
                       case .up:
-                          print("UP")
+                          
+                        player_.zRotation = 2 * CGFloat.pi
                       case .down:
-                          print("DOWN")
+                           player_.zRotation = CGFloat.pi
                       case .right:
-                          print("RIGHT")
+                        player_.zRotation =  3 * CGFloat.pi / 2
                       case .left:
-                          print("LEFT")
+                           player_.zRotation = CGFloat.pi/2
                       default:
                           break
             }
@@ -75,7 +84,7 @@ class GameScene: SKScene {
                     guard let data = data, error == nil else{
                         return
                     }
-                    if(data.acceleration.x > 30){
+                    if(data.acceleration.x > -0.04){
                         print("Reload")
                     }
                     print(data.acceleration.x)
