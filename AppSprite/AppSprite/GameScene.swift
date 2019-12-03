@@ -20,6 +20,7 @@ class GameScene: SKScene {
         /*let recognizer = UITapGestureRecognizer(target: self, action:#selector(onetap))
         view.addGestureRecognizer(recognizer)*/
         spawnPlayer()
+        addgestures()
         }
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
@@ -37,5 +38,30 @@ class GameScene: SKScene {
     func spawnPlayer(){
         player_ = SKSpriteNode(color: playerColor_, size: playerSize_)
         player_.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+    }
+    func addgestures(){
+        let gestures_: [UISwipeGestureRecognizer.Direction] = [.up, .right, .down, .left]
+        for gestures  in gestures_{
+            let gesturesRec = UISwipeGestureRecognizer(target: self, action: #selector(swipe))
+            gesturesRec.direction = gestures
+            self.view?.addGestureRecognizer(gesturesRec)
+        }
+    }
+    @objc func swipe(gesture:UISwipeGestureRecognizer){
+        if let gesture = gesture as? UISwipeGestureRecognizer{
+            switch gesture.direction{
+            case .up:
+                print("UP")
+            case .down:
+                print("DOWN")
+            case .right:
+                print("RIGHT")
+            case .left:
+                print("LEFT")
+            default:
+                print("No")
+            }
+            
+        }
     }
 }
