@@ -12,7 +12,7 @@ import CoreMotion
 
 
 
-class GameScene: SKScene {
+class GameScene: SKScene , SKPhysicsContactDelegate {
     var numproj_ = 4
     var enemycount_ = 0;
     var updateTime_:Double  = 0
@@ -22,9 +22,12 @@ class GameScene: SKScene {
     var labelprojectile_ = SKLabelNode(fontNamed: "Chalkduster")
     let fire_ = SKSpriteNode(imageNamed: "fire")
     
+    let playerCategory_:UInt32 = 0x1 << 0
+    let bulletCategory_:UInt32 = 0x1 << 1
+    let enemyCategory_:UInt32  = 0x1 << 2
     override func didMove(to view: SKView) {
      
-        
+        self.physicsWorld.contactDelegate = self
         spawnPlayer()
        
         addgestures()
@@ -61,9 +64,10 @@ class GameScene: SKScene {
 
                player_ = SKSpriteNode(texture: texture_)
         player_.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
-        
+        player_.physicsBody = SKPhysicsBody(rectangleOf: player_.size)
         self.addChild(player_)
-        
+        player_.physicsBody?.categoryBitMask = playerCategory_
+        player_.physicsBody?.contactTestBitMask = enemyCategory_
     }
     func spawnEnemys(duration_:Double){
             
@@ -97,6 +101,9 @@ class GameScene: SKScene {
         enemy_.physicsBody?.affectedByGravity = false
         enemy_.physicsBody?.isDynamic = false
            self.addChild(enemy_)
+        enemy_.physicsBody?.categoryBitMask = enemyCategory_
+        enemy_.physicsBody?.collisionBitMask = playerCategory_
+        enemy_.physicsBody?.contactTestBitMask = bulletCategory_
         
        }
     func addgestures(){
@@ -142,7 +149,7 @@ class GameScene: SKScene {
                         self.numproj_ = 4
                         self.labelprojectile_.text = String(self.numproj_)
                     }
-                    print(data.acceleration.x)
+                   
                     
                 }
             }
@@ -169,7 +176,18 @@ class GameScene: SKScene {
         projectile_.physicsBody = SKPhysicsBody(rectangleOf: projectile_.size)
         projectile_.physicsBody?.affectedByGravity = false
         projectile_.physicsBody?.isDynamic = false
-    self.addChild(projectile_)
+        self.addChild(projectile_)
+        projectile_.physicsBody?.collisionBitMask = enemyCategory_
+        projectile_.physicsBody?.categoryBitMask = bulletCategory_
+        }
+    }
+    func didBegin(_ contact: SKPhysicsContact) {
+        let collision:UInt32 = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        if collision == enemyCategory_ | bulletCategory_{
+            print("Collision bullet enemy")
+        }
+        if collision == enemyCategory_ | playerCategory_{
+            print("Collision player enemy")
         }
     }
 }
