@@ -14,6 +14,8 @@ import CoreMotion
 
 class GameScene: SKScene {
     var numproj_ = 4
+    var enemycount_ = 0;
+    var updateTime_:Double  = 0
     var player_  = SKSpriteNode()
     var enemy_ = SKSpriteNode()
     var motionManager = CMMotionManager()
@@ -24,7 +26,7 @@ class GameScene: SKScene {
      
         
         spawnPlayer()
-        spawnEnemys(duration_: 1.2)
+       
         addgestures()
         accelerometer()
         labelprojectile_.text = String(self.numproj_)
@@ -40,6 +42,15 @@ class GameScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        if updateTime_ == 0 {
+            updateTime_ = currentTime
+        }
+
+        if currentTime - updateTime_ > 1 {
+            self.spawnEnemys(duration_: 1.2)
+            updateTime_ = currentTime
+        }
+   
        
     }
  
@@ -55,12 +66,26 @@ class GameScene: SKScene {
         
     }
     func spawnEnemys(duration_:Double){
+            
            //player_ = SKSpriteNode(color: playerColor_, size: playerSize_)
            let texture_ = SKTexture(imageNamed:"eyelander")
            texture_.filteringMode = SKTextureFilteringMode.nearest
 
            enemy_ = SKSpriteNode(texture: texture_)
-           enemy_.position = CGPoint(x: self.frame.midX, y: self.frame.maxY)
+        let randomXStart = Int.random(in: 0 ... 3)
+
+        switch randomXStart{
+        case 0 :
+              enemy_.position  = CGPoint(x: self.frame.midX, y: self.frame.maxY)
+        case 1 :
+             enemy_.position  = CGPoint(x: self.frame.midX, y: self.frame.minY)
+        case 2 :
+             enemy_.position  =  CGPoint(x: self.frame.maxX, y: self.frame.midY)
+        case 3 :
+             enemy_.position  =  CGPoint(x: self.frame.minX, y: self.frame.midY)
+        default : break
+        }
+           
            let action = SKAction.move(to: CGPoint(
                      x: player_.position.x,
                      y: player_.position.y
@@ -72,7 +97,7 @@ class GameScene: SKScene {
         enemy_.physicsBody?.affectedByGravity = false
         enemy_.physicsBody?.isDynamic = false
            self.addChild(enemy_)
-           
+        
        }
     func addgestures(){
         let gestures_: [UISwipeGestureRecognizer.Direction] = [.up, .right, .down, .left]
