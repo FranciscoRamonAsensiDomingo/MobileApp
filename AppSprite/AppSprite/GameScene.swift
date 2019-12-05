@@ -14,17 +14,21 @@ import CoreMotion
 
 class GameScene: SKScene , SKPhysicsContactDelegate {
     var numproj_ = 4
-    var enemycount_ = 0;
+    var points_ = 0
+    var enemycount_ = 0
     var updateTime_:Double  = 0
     var player_  = SKSpriteNode()
     var enemy_ = SKSpriteNode()
     var motionManager = CMMotionManager()
     var labelprojectile_ = SKLabelNode(fontNamed: "Chalkduster")
-    let fire_ = SKSpriteNode(imageNamed: "fire")
+    var labelPoints_ = SKLabelNode(fontNamed: "Chalkduster")
     
+    let fire_ = SKSpriteNode(imageNamed: "fire")
+    var alive_ = true
     let playerCategory_:UInt32 = 0x1 << 0
     let bulletCategory_:UInt32 = 0x1 << 1
     let enemyCategory_:UInt32  = 0x1 << 2
+    var time :Double  = 0
     override func didMove(to view: SKView) {
      
         self.physicsWorld.contactDelegate = self
@@ -36,7 +40,12 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         labelprojectile_.fontSize = 45
         labelprojectile_.fontColor = SKColor.white
         labelprojectile_.position = CGPoint(x: frame.minX + 80 , y:frame.maxY-50)
-          addChild(labelprojectile_)
+        addChild(labelprojectile_)
+        labelPoints_.text = String(self.points_)
+        labelPoints_.fontSize = 45
+        labelPoints_.fontColor = SKColor.white
+        labelPoints_.position = CGPoint(x: frame.maxX - 100 , y:frame.maxY-50)
+        addChild(labelPoints_)
         fire_.position = CGPoint(x: frame.minX + 30 , y:frame.maxY-30)
         addChild(fire_)
         }
@@ -45,15 +54,28 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        if(alive_ == false) {
+           enemy_.removeFromParent()
+           fire_.removeFromParent()
+            
+           labelprojectile_.text = String("YOU DIE")
+           labelprojectile_.fontSize = 60
+           labelprojectile_.fontColor = SKColor.white
+           labelprojectile_.position = CGPoint(x: frame.midX  , y:frame.midY)
+        
+           
+            
+        }
         if updateTime_ == 0 {
             updateTime_ = currentTime
         }
 
         if currentTime - updateTime_ > 1 {
-            self.spawnEnemys(duration_: 1.2)
+            self.spawnEnemys(duration_: 4 - time)
+            time+=0.5
             updateTime_ = currentTime
         }
-   
+        
        
     }
  
@@ -65,14 +87,21 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
                player_ = SKSpriteNode(texture: texture_)
         player_.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
         player_.physicsBody = SKPhysicsBody(rectangleOf: player_.size)
-        self.addChild(player_)
+        player_.physicsBody?.affectedByGravity = false
+        player_.physicsBody?.isDynamic = true
         player_.physicsBody?.categoryBitMask = playerCategory_
+        player_.physicsBody?.collisionBitMask = enemyCategory_
         player_.physicsBody?.contactTestBitMask = enemyCategory_
+        self.addChild(player_)
+
     }
     func spawnEnemys(duration_:Double){
             
            //player_ = SKSpriteNode(color: playerColor_, size: playerSize_)
-           let texture_ = SKTexture(imageNamed:"eyelander")
+       
+            
+        
+        let texture_ = SKTexture(imageNamed:"eyelander")
            texture_.filteringMode = SKTextureFilteringMode.nearest
 
            enemy_ = SKSpriteNode(texture: texture_)
@@ -99,12 +128,10 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
 
         enemy_.physicsBody = SKPhysicsBody(rectangleOf: enemy_.size)
         enemy_.physicsBody?.affectedByGravity = false
-        enemy_.physicsBody?.isDynamic = false
-           self.addChild(enemy_)
+        enemy_.physicsBody?.isDynamic = true
         enemy_.physicsBody?.categoryBitMask = enemyCategory_
-        enemy_.physicsBody?.collisionBitMask = playerCategory_
-        enemy_.physicsBody?.contactTestBitMask = bulletCategory_
-        
+        enemy_.physicsBody?.collisionBitMask = bulletCategory_
+        self.addChild(enemy_)
        }
     func addgestures(){
         let gestures_: [UISwipeGestureRecognizer.Direction] = [.up, .right, .down, .left]
@@ -115,7 +142,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         }
     }
     @objc func swipe(gesture:UISwipeGestureRecognizer){
-        if let gesture = gesture as? UISwipeGestureRecognizer{
+//        if let gesture = gesture as? UISwipeGestureRecognizer{
            switch gesture.direction{
                       case .up:
                         player_.zRotation =  3 * CGFloat.pi / 2
@@ -133,7 +160,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
                           break
             }
            
-        }
+//        }
     }
         func accelerometer(){
             
@@ -155,7 +182,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             }
         }
     func shoot( rot: CGFloat) {
-        if(numproj_ > 0){
+        if(numproj_ > 0 && self.alive_ == true){
             self.numproj_ -= 1
             labelprojectile_.text = String(self.numproj_)
     let projectile_ = SKSpriteNode(imageNamed: "fire")
@@ -175,19 +202,30 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
 
         projectile_.physicsBody = SKPhysicsBody(rectangleOf: projectile_.size)
         projectile_.physicsBody?.affectedByGravity = false
-        projectile_.physicsBody?.isDynamic = false
-        self.addChild(projectile_)
-        projectile_.physicsBody?.collisionBitMask = enemyCategory_
+        projectile_.physicsBody?.isDynamic = true
         projectile_.physicsBody?.categoryBitMask = bulletCategory_
+        projectile_.physicsBody?.collisionBitMask = enemyCategory_
+        projectile_.physicsBody?.contactTestBitMask = enemyCategory_
+        self.addChild(projectile_)
+         
+       
+        
         }
     }
     func didBegin(_ contact: SKPhysicsContact) {
         let collision:UInt32 = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         if collision == enemyCategory_ | bulletCategory_{
-            print("Collision bullet enemy")
+            contact.bodyA.node?.removeFromParent()
+            contact.bodyB.node?.removeFromParent()
+            points_+=100
+            labelPoints_.text = String(self.points_)
         }
-        if collision == enemyCategory_ | playerCategory_{
-            print("Collision player enemy")
-        }
+      if collision == enemyCategory_ | playerCategory_{
+               contact.bodyA.node?.removeFromParent()
+               contact.bodyB.node?.removeFromParent()
+               alive_ = false
+           }
     }
+  
 }
+

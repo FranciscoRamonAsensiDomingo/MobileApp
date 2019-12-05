@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		31CEEBAA23997DEE00D85403 /* MyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CEEBA923997DEE00D85403 /* MyTableViewController.swift */; };
+		31CEEBD0239991ED00D85403 /* AppSprite.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 31CEEBCE239991ED00D85403 /* AppSprite.xcdatamodeld */; };
+		31CEEBD22399941800D85403 /* MyUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CEEBD12399941800D85403 /* MyUIViewController.swift */; };
 		31DDBEAD2396DCB200F47454 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31DDBEAC2396DCB200F47454 /* Assets.xcassets */; };
 		31DDF377237176B2009EEB9F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DDF376237176B2009EEB9F /* AppDelegate.swift */; };
 		31DDF37D237176B2009EEB9F /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DDF37C237176B2009EEB9F /* GameScene.swift */; };
@@ -35,6 +38,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		31CEEBA52399792000D85403 /* AppSprite.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AppSprite.entitlements; sourceTree = "<group>"; };
+		31CEEBA923997DEE00D85403 /* MyTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTableViewController.swift; sourceTree = "<group>"; };
+		31CEEBCF239991ED00D85403 /* AppSprite.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AppSprite.xcdatamodel; sourceTree = "<group>"; };
+		31CEEBD12399941800D85403 /* MyUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyUIViewController.swift; sourceTree = "<group>"; };
 		31DDBEAC2396DCB200F47454 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		31DDF373237176B2009EEB9F /* AppSprite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppSprite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		31DDF376237176B2009EEB9F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -79,6 +86,7 @@
 		31DDF36A237176B2009EEB9F = {
 			isa = PBXGroup;
 			children = (
+				31CEEBCE239991ED00D85403 /* AppSprite.xcdatamodeld */,
 				31DDF375237176B2009EEB9F /* AppSprite */,
 				31DDF390237176B3009EEB9F /* AppSpriteTests */,
 				31DDF39B237176B3009EEB9F /* AppSpriteUITests */,
@@ -99,6 +107,7 @@
 		31DDF375237176B2009EEB9F /* AppSprite */ = {
 			isa = PBXGroup;
 			children = (
+				31CEEBA52399792000D85403 /* AppSprite.entitlements */,
 				31DDF376237176B2009EEB9F /* AppDelegate.swift */,
 				31DDF37C237176B2009EEB9F /* GameScene.swift */,
 				31DDF37E237176B2009EEB9F /* GameViewController.swift */,
@@ -106,6 +115,8 @@
 				31DDF385237176B2009EEB9F /* LaunchScreen.storyboard */,
 				31DDBEAC2396DCB200F47454 /* Assets.xcassets */,
 				31DDF388237176B2009EEB9F /* Info.plist */,
+				31CEEBA923997DEE00D85403 /* MyTableViewController.swift */,
+				31CEEBD12399941800D85403 /* MyUIViewController.swift */,
 			);
 			path = AppSprite;
 			sourceTree = "<group>";
@@ -261,7 +272,10 @@
 			files = (
 				31DDF37D237176B2009EEB9F /* GameScene.swift in Sources */,
 				31DDF37F237176B2009EEB9F /* GameViewController.swift in Sources */,
+				31CEEBD22399941800D85403 /* MyUIViewController.swift in Sources */,
+				31CEEBD0239991ED00D85403 /* AppSprite.xcdatamodeld in Sources */,
 				31DDF377237176B2009EEB9F /* AppDelegate.swift in Sources */,
+				31CEEBAA23997DEE00D85403 /* MyTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,6 +450,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AppSprite/AppSprite.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AppSprite/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -453,6 +468,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AppSprite/AppSprite.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AppSprite/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -586,6 +602,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		31CEEBCE239991ED00D85403 /* AppSprite.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				31CEEBCF239991ED00D85403 /* AppSprite.xcdatamodel */,
+			);
+			currentVersion = 31CEEBCF239991ED00D85403 /* AppSprite.xcdatamodel */;
+			path = AppSprite.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 31DDF36B237176B2009EEB9F /* Project object */;
 }
