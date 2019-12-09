@@ -72,7 +72,10 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
 
         if currentTime - updateTime_ > 1 {
             self.spawnEnemys(duration_: 4 - time)
-            time+=0.5
+            time+=0.25
+            if(time>=3.5){
+                time = 3.5;
+            }
             updateTime_ = currentTime
         }
         
